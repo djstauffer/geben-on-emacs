@@ -2468,7 +2468,17 @@ The buffer commands are:
 	 (mapcar (lambda (key)
 		   (let ((arg (plist-get (car args) key)))
 		     (when arg
-		       (cons (geben-cmd-param-for key) arg))))
+		       (cons (geben-cmd-param-for key)
+                             (if (eq key :name)
+                                 (concat
+                                  "\""
+                                  (replace-regexp-in-string
+                                   "*" "\\\\*"
+                                   (replace-regexp-in-string
+                                    "\"" "\\\\\""
+                                    arg))
+                                  "\"")
+                               arg)))))
 		 '(:depth :context-id :name :max-data-size :type :page :key :address))))
 
 
